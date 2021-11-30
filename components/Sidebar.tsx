@@ -1,4 +1,3 @@
-import React from 'react';
 import {
 	HeartIcon,
 	HomeIcon,
@@ -8,16 +7,10 @@ import {
 	RssIcon,
 	SearchIcon,
 } from '@heroicons/react/outline';
-import { signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { signOut } from 'next-auth/react';
+import React from 'react';
 
 const Sidebar = () => {
-	const { data: session, status } = useSession();
-	const router = useRouter();
-	console.log(session);
-	if (status !== 'loading' && !session && router.isReady) {
-		router.replace('/login');
-	}
 	return (
 		<div className="text-gray-500 p-5 text-sm border-r border-gray-900">
 			<div className="space-y-4">
