@@ -1,4 +1,3 @@
-import spotify from 'next-auth/providers/spotify';
 import SpotifyWebApi from 'spotify-web-api-node';
 
 const scopes = [
