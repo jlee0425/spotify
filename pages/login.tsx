@@ -30,7 +30,7 @@ const login = ({
 	return (
 		<div className="bg-black w-full min-h-screen flex flex-col justify-center items-center">
 			<div className="relative w-52 h-52 mb-5">
-				<Image src={SpotifyLogo} layout="fill" alt="" />
+				<Image src={SpotifyLogo} layout="fill" alt="" priority />
 			</div>
 			{providers &&
 				Object.values(providers).map((provider) => (
