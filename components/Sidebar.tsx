@@ -3,12 +3,21 @@ import {
 	HeartIcon,
 	HomeIcon,
 	LibraryIcon,
+	LogoutIcon,
 	PlusCircleIcon,
 	RssIcon,
 	SearchIcon,
 } from '@heroicons/react/outline';
+import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const Sidebar = () => {
+	const { data: session, status } = useSession();
+	const router = useRouter();
+	console.log(session);
+	if (status !== 'loading' && !session && router.isReady) {
+		router.replace('/login');
+	}
 	return (
 		<div className="text-gray-500 p-5 text-sm border-r border-gray-900">
 			<div className="space-y-4">
@@ -52,6 +61,10 @@ const Sidebar = () => {
 				<p className="playlist">Playlist name...</p>
 				<p className="playlist">Playlist name...</p>
 				<p className="playlist">Playlist name...</p>
+				<button className="main-btn" onClick={() => signOut()}>
+					<LogoutIcon className="h-5 w-5" />
+					<p>Sign out</p>
+				</button>
 			</div>
 		</div>
 	);
