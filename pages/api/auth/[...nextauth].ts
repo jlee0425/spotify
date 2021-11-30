@@ -1,6 +1,30 @@
 import NextAuth from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import SpotifyProvider from 'next-auth/providers/spotify';
-import { LOGIN_URL } from '../../../lib/spotify';
+import spotifyAPI, { LOGIN_URL } from 'lib/spotify';
+
+const refreshAccessToken = async (token: JWT) => {
+	try {
+		spotifyAPI.setAccessToken(token.accessToken as string);
+		spotifyAPI.setRefreshToken(token.refreshToken as string);
+
+		const { body: refreshedToken } = await spotifyAPI.refreshAccessToken();
+		console.log('refreshToken: ', refreshedToken);
+
+		return {
+			...token,
+			accessToken: refreshedToken.access_token,
+			accessTokenExpires: Date.now() + refreshedToken.expires_in * 1000, // 1hr as 3600 returns from spotifyAPI
+			refreshToken: refreshedToken.refresh_token ?? token.refreshToken,
+		};
+	} catch (error) {
+		console.error(error);
+		return {
+			...token,
+			error: 'RefreshAccessTokenError',
+		};
+	}
+};
 
 export default NextAuth({
 	providers: [
@@ -10,4 +34,38 @@ export default NextAuth({
 			authorization: LOGIN_URL,
 		}),
 	],
+	secret: process.env.JWT_SECRET,
+	pages: {
+		signIn: '/login',
+	},
+	callbacks: {
+		async jwt({ token, account, user }) {
+			// initial signin
+			if (account && user) {
+				return {
+					...token,
+					accessToken: account.access_token as string,
+					refreshToken: account.refresh_token as string,
+					username: account.providerAccountId as string,
+					accessTokenExpires: Number(account.expires_at) * 1000, // expiry time in seconds
+				};
+			}
+			// return previous token if the access token has not expired yet
+			if (Date.now() < Number(token.accessTokenExpires)) {
+				console.log('EXISTING ACCESS TOKEN IS VALID');
+				return token;
+			}
+
+			// access token has expired, -> renew with refresh_token
+			console.log('ACCESS TOKEN HAS EXPIRED, REFRESHING...');
+			return await refreshAccessToken(token);
+		},
+
+		async session({ session, token, user }) {
+			user.accessToken = token.accessToken;
+			user.refreshToken = token.refreshToken;
+			user.username = token.username;
+			return session;
+		},
+	},
 });
