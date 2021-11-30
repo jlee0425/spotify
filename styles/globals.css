@@ -18,3 +18,15 @@ a {
 * {
 	box-sizing: border-box;
 }
+
+.main-btn {
+	@apply flex items-center space-x-2 hover:text-white;
+}
+
+.divider {
+	@apply border-gray-900 border-t-2;
+}
+
+.playlist {
+	@apply cursor-pointer hover:text-white;
+}
