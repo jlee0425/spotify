@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -23,7 +24,7 @@ const Main = () => {
 						src={session?.user?.image as string}
 						alt=""
 					/>
-					<h2>{session?.user.name}</h2>
+					<h2>{session?.user?.name}</h2>
 					<ChevronDownIcon className="h-5 w-5" />
 				</div>
 			</header>
