@@ -31,7 +31,7 @@ const Main = () => {
 
 	useEffect(() => {
 		setColor(shuffle(colors).pop() as string);
-	}, [currentPlaylistId]);
+	}, []);
 
 	return (
 		<div className="flex flex-col flex-grow text-white">
@@ -107,7 +107,7 @@ const Tracks = () => {
 	const playlist = useRecoilValue(playlistState);
 
 	return (
-		<div className="px-8 pb-28 flex-col space-y-1 overflow-y-scroll h-screen">
+		<div className="px-8 pb-42 flex-col space-y-1 overflow-y-scroll h-screen">
 			{playlist?.tracks?.items?.map((pl, i) => (
 				<Song key={pl.track.id} track={pl.track} order={i + 1} />
 			))}
