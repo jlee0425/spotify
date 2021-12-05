@@ -31,7 +31,7 @@ const Sidebar = () => {
 	}, [session, setCurrentPlaylist, spotify]);
 
 	return (
-		<div className=" hidden md:inline-flex text-gray-500 p-5 border-r border-gray-900 overflow-y-scroll h-screen scrollbar-hide">
+		<div className=" hidden md:inline-flex text-gray-500 p-5 border-r border-gray-900 overflow-y-scroll h-screen scrollbar-hide pb-36">
 			<div className="space-y-4 text-xs lg:text-sm xl:text-lg sm:max-w-[12rem] lg:max-w-[15rem]">
 				<button className="main-btn">
 					<HomeIcon className="h-5 w-5" />

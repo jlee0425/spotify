@@ -1,6 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
+import { useSpotify } from 'hooks/useSpotify';
 import React from 'react';
+import { useSetRecoilState } from 'recoil';
 import { Track } from 'recoil/playlistAtom';
+import { currentTrackId, isPlaying } from 'recoil/songAtom';
 
 interface Props {
 	order: number;
@@ -22,8 +25,23 @@ const millisToMinuteAndSecond = (millis: number) => {
 };
 
 const Song = ({ order, track }: Props) => {
+	const spotify = useSpotify();
+	const setTrackId = useSetRecoilState(currentTrackId);
+	const setIsPlaying = useSetRecoilState(isPlaying);
+
+	const playSong = () => {
+		setTrackId(track.id);
+		setIsPlaying(true);
+		spotify.play({
+			uris: [track.uri],
+		});
+	};
+
 	return (
-		<div className="grid grid-cols-2 text-gray-500 py-4 px-5 hover:bg-gray-900 rounded-lg cursor-pointer">
+		<div
+			className="grid grid-cols-2 text-gray-500 py-4 px-5 hover:bg-gray-900 rounded-lg cursor-pointer"
+			onClick={playSong}
+		>
 			<div className="flex items-center space-x-4">
 				<span>{order}</span>
 				<img className="w-10 h-10" src={track.album.images?.[0].url} alt="" />

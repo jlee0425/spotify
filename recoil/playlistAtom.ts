@@ -85,6 +85,13 @@ export interface Track {
 	type: string;
 	uri: string;
 }
+
+export interface CurrentTrack extends Track {
+	progress_ms: number;
+	timestamp: number;
+	is_playing: boolean;
+	shuffle: boolean;
+}
 export interface Artist {
 	href: string;
 	id: string;

@@ -9,7 +9,10 @@ module.exports = {
 		extend: {},
 	},
 	variants: {
-		extend: {},
+		extend: {
+			animation: ['motion-safe'],
+			transform: ['hover', 'focus'],
+		},
 	},
 	plugins: [require('tailwind-scrollbar-hide')],
 };
