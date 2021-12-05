@@ -30,3 +30,7 @@ a {
 .playlist {
 	@apply cursor-pointer hover:text-white;
 }
+
+.selected-playlist {
+	@apply text-white;
+}

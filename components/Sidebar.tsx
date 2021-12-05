@@ -7,13 +7,32 @@ import {
 	RssIcon,
 	SearchIcon,
 } from '@heroicons/react/outline';
-import { signOut } from 'next-auth/react';
-import React from 'react';
+import { useSpotify } from 'hooks/useSpotify';
+import { signOut, useSession } from 'next-auth/react';
+import React, { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { playlistIdState, PlaylistResponse } from 'recoil/playlistAtom';
 
 const Sidebar = () => {
+	const { data: session, status } = useSession();
+	const spotify = useSpotify();
+	const [playlists, setPlaylists] = useState<PlaylistResponse[]>([]);
+	const [currentPlaylist, setCurrentPlaylist] = useRecoilState(playlistIdState);
+
+	useEffect(() => {
+		if (spotify.getAccessToken()) {
+			spotify.getUserPlaylists().then((data) => {
+				if (data) {
+					setPlaylists(data.body.items as unknown as PlaylistResponse[]);
+					setCurrentPlaylist(data.body.items[0]?.id);
+				}
+			});
+		}
+	}, [session, setCurrentPlaylist, spotify]);
+
 	return (
-		<div className="text-gray-500 p-5 text-sm border-r border-gray-900 overflow-y-scroll h-screen scrollbar-hide">
-			<div className="space-y-4">
+		<div className=" hidden md:inline-flex text-gray-500 p-5 border-r border-gray-900 overflow-y-scroll h-screen scrollbar-hide">
+			<div className="space-y-4 text-xs lg:text-sm xl:text-lg sm:max-w-[12rem] lg:max-w-[15rem]">
 				<button className="main-btn">
 					<HomeIcon className="h-5 w-5" />
 					<p>Home</p>
@@ -40,20 +59,15 @@ const Sidebar = () => {
 					<p>Your Episodes</p>
 				</button>
 				<hr className="divider" />
-				{/* Playlists */}
-				<p className="playlist">Playlist name...</p>
-				<p className="playlist">Playlist name...</p>
-				<p className="playlist">Playlist name...</p>
-				<p className="playlist">Playlist name...</p>
-				<p className="playlist">Playlist name...</p>
-				<p className="playlist">Playlist name...</p>
-				<p className="playlist">Playlist name...</p>
-				<p className="playlist">Playlist name...</p>
-				<p className="playlist">Playlist name...</p>
-				<p className="playlist">Playlist name...</p>
-				<p className="playlist">Playlist name...</p>
-				<p className="playlist">Playlist name...</p>
-				<p className="playlist">Playlist name...</p>
+				{playlists.map((pl) => (
+					<p
+						className="playlist"
+						key={pl.id}
+						onClick={() => setCurrentPlaylist(pl.id)}
+					>
+						{pl.name}
+					</p>
+				))}
 				<button className="main-btn" onClick={() => signOut()}>
 					<LogoutIcon className="h-5 w-5" />
 					<p>Sign out</p>
