@@ -1,4 +1,5 @@
 import { signIn, useSession } from 'next-auth/react';
+import { CustomUser } from 'pages/api/auth/[...nextauth]';
 import { useEffect } from 'react';
 import SpotifyWebApi from 'spotify-web-api-node';
 
@@ -32,7 +33,6 @@ export default spotifyAPI;
 
 export const useSpotify = () => {
 	const { data: session, status } = useSession();
-
 	useEffect(() => {
 		if (session) {
 			if (
@@ -42,7 +42,9 @@ export const useSpotify = () => {
 				signIn();
 			}
 
-			spotifyAPI.setAccessToken(session!.user!.accessToken);
+			spotifyAPI.setAccessToken(
+				(session.user as unknown as CustomUser).accessToken
+			);
 		}
 	}, [session, status]);
 

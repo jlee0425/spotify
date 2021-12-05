@@ -21,7 +21,7 @@ export const useSongInfo = () => {
 						},
 					}
 				);
-				if (res.ok) {
+				if (res?.status === 200) {
 					console.log(`res.data`, res);
 					setSongInfo(res.data);
 				}

@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { Session, User } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import SpotifyProvider from 'next-auth/providers/spotify';
 import spotifyAPI, { LOGIN_URL } from 'hooks/useSpotify';
@@ -65,10 +65,19 @@ export default NextAuth({
 		},
 
 		async session({ session, token }) {
-			session!.user!.accessToken = token.accessToken;
-			session!.user!.refreshToken = token.refreshToken;
-			session!.user!.username = token.username;
+			(session.user as unknown as CustomUser).accessToken =
+				token.accessToken as string;
+			(session.user as unknown as CustomUser).refreshToken =
+				token.refreshToken as string;
+			(session.user as unknown as CustomUser).username =
+				token.username as string;
 			return session;
 		},
 	},
 });
+
+export interface CustomUser extends User {
+	username: string;
+	accessToken: string;
+	refreshToken: string;
+}
