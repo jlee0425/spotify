@@ -52,32 +52,39 @@ export interface TrackResponse {
 	added_by: { external_urls: { spotify: string; href: string } };
 	is_local: false;
 	primary_color: null;
-	track: {
-		album: { album_type: string };
-		artists: Artist[];
-		available_markets: string[];
-		disc_number: number;
-		duration_ms: number;
-		episode: false;
-		explicit: false;
-		external_ids: { isrc: string };
-		external_urls: {
-			spotify: string;
-		};
-		href: string;
-		id: string;
-		is_local: false;
-		name: string;
-		popularity: number;
-		preview_url: string;
-		track: true;
-		track_number: number;
-		type: string;
-		uri: string;
-	};
+	track: Track;
 	video_thumbnail: { url: null };
 }
 
+export interface Track {
+	album: {
+		album_type: string;
+		images: ImageProps[];
+		name: string;
+		release_date: string;
+		total_tracks: number;
+	};
+	artists: Artist[];
+	available_markets: string[];
+	disc_number: number;
+	duration_ms: number;
+	episode: false;
+	explicit: false;
+	external_ids: { isrc: string };
+	external_urls: {
+		spotify: string;
+	};
+	href: string;
+	id: string;
+	is_local: false;
+	name: string;
+	popularity: number;
+	preview_url: string;
+	track: true;
+	track_number: number;
+	type: string;
+	uri: string;
+}
 export interface Artist {
 	href: string;
 	id: string;
